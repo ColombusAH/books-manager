@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import { isUuid } from "uuidv4";
+import { validate } from "uuid";
 
 const availableGenres = ['fiction', 'non-fiction', 'biography', 'poetry', 'drama', 'science', 'history', 'philosophy', 'self-help', 'Fantasy','other'];
 
 export const validateId = (req: Request,res: Response,next:NextFunction) => {
     console.log('[ValidateId]');
     console.log(req.params);
+   
     try {
-      if(!isUuid(req.params.id)) {
+      if(!validate(req.params.id)) {
         return res.status(400).send('Invalid id');
       }
     } catch (error) {

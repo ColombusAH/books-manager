@@ -1,6 +1,8 @@
-import express from 'express';
+import express, {Errback, NextFunction, Request, Response} from 'express';
 import { uuid } from 'uuidv4';
-import { validateId, validateAddBookDto } from './middlewares/validations.';
+import { validateId, validateAddBookDto } from './middlewares/validations'; 
+import * as products from './data/products.json';
+import { productsRouter } from './products/routes';
 
 const app = express();
 const jsonParser = express.json();
@@ -25,9 +27,25 @@ const db: DB =  {
   books: []
 }
 
+app.all('*', (req, res, next) => {
+  console.log('Request received with the params: ', req.params);
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log('request received in time ', new Date().toISOString());
+  next()
+});
+
 ///1. GET All the books
 app.get('/books', (req, res) => {
-  res.send(db.books);
+  res.send(products);
+});
+
+app.get('/books/error', (req, res) => {
+  throw new Error('Something went wrong');
+  
+  res.send(products);
 });
 
 ///2. GET a single book by id
@@ -59,6 +77,16 @@ app.delete('/books/:id', validateId,(req, res) => {
     return res.status(200).send(book);
   }
   return res.status(404).send('No book with id: ' + id);
+});
+
+
+app.use('/products',productsRouter);
+
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('our error handler');
+  console.error('Error: ', err.name);
+  next(err);
 });
 
 app.listen(port, () => {
