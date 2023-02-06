@@ -10,7 +10,7 @@ productsRouter.get('/', (req, res) => {
 
 productsRouter.get('/:id', (req, res) => {
     const id  = req.params.id;
-    const product = products.data.find(product => product._id === id);
+    const product = products.data.find(product => product.id === id);
     if(product) {
         return res.status(200).send(product);
     }

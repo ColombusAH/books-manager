@@ -1,8 +1,8 @@
 import express, {Errback, NextFunction, Request, Response} from 'express';
 import { uuid } from 'uuidv4';
-import { validateId, validateAddBookDto } from './middlewares/validations'; 
+import { validateAddBookDto, validateIdLength, validateProductNameLength } from './middlewares/validations'; 
 import * as products from './data/products.json';
-import { productsRouter } from './products/routes';
+// import { productsRouter } from './products/routes';
 
 const app = express();
 const jsonParser = express.json();
@@ -12,83 +12,71 @@ app.use(jsonParser);
 app.use(express.urlencoded({ extended: true }));
 
 
-interface Book {
+interface Product {
   id: string;
-  title: string;
-  authorId: string;
-  genre: string;
+  categoryId: string;
+  name: string;
+  itemsInStock: number;
 }
 
 interface DB {
-  books: Book[];
+  products: Product[];
 }
 
 const db: DB =  {
-  books: []
+  products: []
 }
 
-app.all('*', (req, res, next) => {
-  console.log('Request received with the params: ', req.params);
-  next();
+app.get('/products', (req: Request, res: Response) => {
+  res.status(200).send(db.products);
 });
 
-app.use((req, res, next) => {
-  console.log('request received in time ', new Date().toISOString());
-  next()
-});
-
-///1. GET All the books
-app.get('/books', (req, res) => {
-  res.send(products);
-});
-
-app.get('/books/error', (req, res) => {
-  throw new Error('Something went wrong');
-  
-  res.send(products);
-});
-
-///2. GET a single book by id
-app.get('/books/:id',validateId, (req, res) => {
-  const id  = req.params.id;
-  const book = db.books.find(book => book.id === id);
-  if(book) {
-    return res.status(200).send(book);
-  }
-  return res.status(404).send('No book with id: ' + id);
-});
-
-
-///3. POST a new book
-app.post('/books', validateAddBookDto,(req, res) => {
-  const { authorId, genre,title  } = req.body;
-  const book: Book = {id: uuid(), authorId, genre,title}
-  db.books.push(book);
-
-  res.status(201).send(book);
-});
-
-///4. Delete an existing book
-app.delete('/books/:id', validateId,(req, res) => {
+app.get('/products/:id',validateIdLength, (req: Request, res: Response) => {
   const id = req.params.id;
-  const book = db.books.find(book => book.id === id);
-  if(book) {
-    db.books = db.books.filter(book => book.id !== id);
-    return res.status(200).send(book);
+  const product = db.products.find(product => product.id === id);
+  if(product) {
+    return res.status(200).send(product);
   }
-  return res.status(404).send('No book with id: ' + id);
+  return res.status(404).send('No product with id: ' + id);
+})
+
+app.post('/products',validateProductNameLength, (req: Request, res: Response) => {
+  const { categoryId, name, itemsInStock } = req.body;
+  const product = {
+    id: uuid(),
+    categoryId,
+    name,
+    itemsInStock
+  }
+  db.products.push(product);
+  res.status(201).send(product);
 });
 
+app.put('/products/:id',validateIdLength,validateProductNameLength, (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { categoryId, name, itemsInStock } = req.body;
+  const product = db.products.find(product => product.id === id);
+  if(product) {
+    product.categoryId = categoryId;
+    product.name = name;
+    product.itemsInStock = itemsInStock;
+    return res.status(200).send(product);
+  }
+  return res.status(404).send('No product with id: ' + id);
+})
 
-app.use('/products',productsRouter);
 
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('our error handler');
-  console.error('Error: ', err.name);
-  next(err);
+app.delete('/products/:id',validateIdLength, (req: Request, res: Response) => {
+  const id = req.params.id;
+  const product = db.products.find(product => product.id === id);
+  if(product) {
+    db.products = db.products.filter(product => product.id !== id);
+    return res.status(204).send(product);
+  }
+  return res.status(404).send('No product with id: ' + id);
 });
 
 app.listen(port, () => {
+  db.products = products.data;
   console.log(`server is running on port ${port}.`);
 });

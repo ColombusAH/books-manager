@@ -26,3 +26,20 @@ export const validateId = (req: Request,res: Response,next:NextFunction) => {
     }
     next();
   }
+
+
+  export const validateIdLength = (req: Request,res: Response,next:NextFunction) => {
+    const id = req.params.id;
+    if(id.length !== 36) {
+      return res.status(400).send('Invalid id');
+    }
+    next();
+  };
+
+  export const validateProductNameLength = (req: Request,res: Response,next:NextFunction) => {
+    const name = req.body.name;
+    if(name.length < 3) {
+      return res.status(409).send('Invalid product name');
+    }
+    next();
+  }

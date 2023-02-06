@@ -1,38 +1,38 @@
 {
   "data": [
     {
-      "_id": "63d2a2ac618d4b7f92801474",
-      "category": "0f4cbbbd-89bd-4cff-a5e5-66d13bfeccaa",
+      "id": "63d2a2ac618d63d2a2ac618d4b7f92801474",
+      "categoryId": "0f4cbbbd-89bd-4cff-a5e5-66d13bfeccaa",
       "itemsInStock": 9,
       "name": "Pugh Battle"
     },
     {
-      "_id": "63d2a2ac590bf78fc5b924f3",
-      "category": "503d83ee-f575-465b-8122-4cf924e09944",
+      "id": "63d2a2ac618d63d2a2ac590bf78fc5b924f3",
+      "categoryId": "503d83ee-f575-465b-8122-4cf924e09944",
       "itemsInStock": 0,
       "name": "Shari Melendez"
     },
     {
-      "_id": "63d2a2ac6436d9f634d1d7eb",
-      "category": "b5b45906-c7b0-4fa0-b5dd-e1c01c9dbc3e",
+      "id": "63d2a2ac618d63d2a2ac6436d9f634d1d7eb",
+      "categoryId": "b5b45906-c7b0-4fa0-b5dd-e1c01c9dbc3e",
       "itemsInStock": 5,
       "name": "Garrison Fisher"
     },
     {
-      "_id": "63d2a2ace18a22351e230571",
-      "category": "e9668ff3-8bf3-4f74-88ca-98919ee71afc",
+      "id": "63d2a2ac618d63d2a2ace18a22351e230571",
+      "categoryId": "e9668ff3-8bf3-4f74-88ca-98919ee71afc",
       "itemsInStock": 2,
       "name": "Nguyen Newman"
     },
     {
-      "_id": "63d2a2ace653cc7dcebf1823",
-      "category": "54dc6423-b4df-40e1-b8a4-6f67539b48fb",
+      "id": "63d2a2ac618d63d2a2ace653cc7dcebf1823",
+      "categoryId": "54dc6423-b4df-40e1-b8a4-6f67539b48fb",
       "itemsInStock": 7,
       "name": "Lindsey Reed"
     },
     {
-      "_id": "63d2a2ac8fafc0e0be805b2e",
-      "category": "1f65dfbc-cd0e-4ea2-a9ec-7b7ca0d26474",
+      "id": "63d2a2ac618d63d2a2ac8fafc0e0be805b2e",
+      "categoryId": "1f65dfbc-cd0e-4ea2-a9ec-7b7ca0d26474",
       "itemsInStock": 9,
       "name": "Christine Moreno"
     }
