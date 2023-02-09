@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateAddBookDto = exports.validateId = void 0;
+exports.validateProductNameLength = exports.validateIdLength = exports.validateAddBookDto = exports.validateId = void 0;
 const uuid_1 = require("uuid");
 const availableGenres = ['fiction', 'non-fiction', 'biography', 'poetry', 'drama', 'science', 'history', 'philosophy', 'self-help', 'Fantasy', 'other'];
 const validateId = (req, res, next) => {
@@ -27,3 +27,19 @@ const validateAddBookDto = (req, res, next) => {
     next();
 };
 exports.validateAddBookDto = validateAddBookDto;
+const validateIdLength = (req, res, next) => {
+    const id = req.params.id;
+    if (id.length !== 36) {
+        return res.status(400).send('Invalid id');
+    }
+    next();
+};
+exports.validateIdLength = validateIdLength;
+const validateProductNameLength = (req, res, next) => {
+    const name = req.body.name;
+    if (name.length < 3) {
+        return res.status(409).send('Invalid product name');
+    }
+    next();
+};
+exports.validateProductNameLength = validateProductNameLength;

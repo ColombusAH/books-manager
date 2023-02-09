@@ -23,19 +23,53 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productsRouter = void 0;
+exports.router = void 0;
 const express_1 = require("express");
+const uuidv4_1 = require("uuidv4");
 const products = __importStar(require("../data/products.json"));
-const productsRouter = (0, express_1.Router)();
-exports.productsRouter = productsRouter;
-productsRouter.get('/', (req, res) => {
-    res.send(products);
+const validations_1 = require("../middlewares/validations");
+const router = (0, express_1.Router)();
+exports.router = router;
+router.get('/', (req, res) => {
+    res.status(200).send(products.data);
 });
-productsRouter.get('/:id', (req, res) => {
+router.get('/:id', validations_1.validateIdLength, (req, res) => {
     const id = req.params.id;
     const product = products.data.find(product => product.id === id);
     if (product) {
         return res.status(200).send(product);
+    }
+    return res.status(404).send('No product with id: ' + id);
+});
+router.post('/', validations_1.validateProductNameLength, (req, res) => {
+    const { categoryId, name, itemsInStock } = req.body;
+    const product = {
+        id: (0, uuidv4_1.uuid)(),
+        categoryId,
+        name,
+        itemsInStock
+    };
+    products.data.push(product);
+    res.status(201).send(product);
+});
+router.put('/:id', validations_1.validateIdLength, validations_1.validateProductNameLength, (req, res) => {
+    const id = req.params.id;
+    const { categoryId, name, itemsInStock } = req.body;
+    const product = products.data.find(product => product.id === id);
+    if (product) {
+        product.categoryId = categoryId;
+        product.name = name;
+        product.itemsInStock = itemsInStock;
+        return res.status(200).send(product);
+    }
+    return res.status(404).send('No product with id: ' + id);
+});
+router.delete('/:id', validations_1.validateIdLength, (req, res) => {
+    const id = req.params.id;
+    const product = products.data.find(product => product.id === id);
+    if (product) {
+        // products.data = db.products.filter(product => product.id !== id);
+        return res.status(204).send(product);
     }
     return res.status(404).send('No product with id: ' + id);
 });
