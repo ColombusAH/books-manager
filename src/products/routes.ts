@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { uuid } from "uuidv4";
 import * as products from '../data/products.json';
 import { validateIdLength, validateProductNameLength } from "../middlewares/validations";
-
+import {ProductModel} from '../models/product.model' 
 
 const router  = Router();
 
@@ -19,15 +19,18 @@ router.get('/:id',validateIdLength, (req: Request, res: Response) => {
     return res.status(404).send('No product with id: ' + id);
  })
   
-router.post('/',validateProductNameLength, (req: Request, res: Response) => {
+router.post('/',validateProductNameLength, async (req: Request, res: Response) => {
     const { categoryId, name, itemsInStock } = req.body;
     const product = {
-      id: uuid(),
       categoryId,
       name,
       itemsInStock
     }
-    products.data.push(product);
+    console.log('sdsdsdd');
+    const p = await ProductModel.create(product);
+    console.log(p);
+  
+    // products.data.push(product);
     res.status(201).send(product);
 });
   
